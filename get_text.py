@@ -29,7 +29,7 @@ def callback(indata, frames, time, status):
         print(status, file=sys.stderr)
     q.put(bytes(indata))
 
-async def record_text():
+def record_text():
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument(
         "-l", "--list-devices", action="store_true",
@@ -83,6 +83,7 @@ async def record_text():
                 if rec.AcceptWaveform(data):
                     output = json.loads(rec.Result())
                     text = output['text']
+                    print(text)
                     if (get_emotion(text) =="POSITIVE"):
                         increase_cursor(5)
                     else:
