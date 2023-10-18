@@ -1,7 +1,6 @@
 import threading
-import cursor
-import text_emotion
 from get_text import record_text
+from video.src.emotion_webcam_demo import record_video
 
 
 def main():
