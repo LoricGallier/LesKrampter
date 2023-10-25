@@ -1,4 +1,8 @@
+import threading
+from time import sleep
 
+
+cursor_lock = threading.Lock()
 cursor = 50
 
 NEUTRAL, HAPPY, SAD, ANGRY, VERY_HAPPY = range(5)
@@ -19,53 +23,67 @@ def state():
     
     
 def is_neutral():
-    if cursor > 40 and cursor < 60:
-        return True
-    else :
-        return False
+    with cursor_lock:
+        if cursor > 40 and cursor < 60:
+            return True
+        else :
+            return False
     
 def is_happy():
-    if cursor > 60 and cursor < 80:
-        return True
-    else :
-        return False
+    with cursor_lock:
+        if cursor > 60 and cursor < 80:
+            return True
+        else :
+            return False
     
 def is_sad():
-    if cursor > 20 and cursor < 40:
-        return True
-    else :
-        return False
+    with cursor_lock:
+        if cursor > 20 and cursor < 40:
+            return True
+        else :
+            return False
     
 def is_angry():
-    if cursor > 0 and cursor < 20:
-        return True
-    else :
-        return False
+    with cursor_lock:
+        if cursor > 0 and cursor < 20:
+            return True
+        else :
+            return False
     
 def is_very_happy():
-    if cursor > 80 and cursor < 100:
-        return True
-    else :
-        return False
+    with cursor_lock:
+        if cursor > 80 and cursor < 100:
+            return True
+        else :
+            return False
 
 def get_cursor():
-    return cursor
+    with cursor_lock:
+        return cursor
 
 def increase_cursor(value):
-    global cursor
-    cursor += value
-    if cursor > 100:
-        cursor = 100
+    with cursor_lock:
+        global cursor
+        cursor += value
+        if cursor > 100:
+            cursor = 100
 def decrease_cursor(value):
-    global cursor
-    cursor -= value
-    if cursor < 0:
-        cursor = 0
+    with cursor_lock:
+        global cursor
+        cursor -= value
+        if cursor < 0:
+            cursor = 0
 
 def reset_cursor():
-    global cursor
-    cursor = 50
+    with cursor_lock:
+        global cursor
+        cursor = 50
     
-
+def print_cursor():
+    while True:
+        with cursor_lock:
+        
+            print(cursor)
+        sleep(5)
     
 

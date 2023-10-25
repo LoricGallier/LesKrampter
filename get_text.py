@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 
 # prerequisites: as described in https://alphacephei.com/vosk/install and also python module `sounddevice` (simply run command `pip install sounddevice`)
-# Example usage using Dutch (nl) recognition model: `python test_microphone.py -m nl`
-# For more help run: `python test_microphone.py -h`
+
 
 import argparse
 import queue
 import sys
 import sounddevice as sd
 import json
-from text_emotion import get_emotion
+from text_emotion import get_emotionV2
 from cursor import increase_cursor, decrease_cursor
 
 from vosk import Model, KaldiRecognizer
@@ -29,7 +28,7 @@ def callback(indata, frames, time, status):
         print(status, file=sys.stderr)
     q.put(bytes(indata))
 
-async def record_text():
+def record_text():
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument(
         "-l", "--list-devices", action="store_true",
@@ -83,7 +82,8 @@ async def record_text():
                 if rec.AcceptWaveform(data):
                     output = json.loads(rec.Result())
                     text = output['text']
-                    if (get_emotion(text) =="POSITIVE"):
+                    print(text)
+                    if (get_emotionV2(text) =="POSITIVE"):
                         increase_cursor(5)
                     else:
                         decrease_cursor(5)
