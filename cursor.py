@@ -1,6 +1,8 @@
 import threading
 from time import sleep
+from output import update_luminosity, notify, get_volume
 
+initialVolume = get_volume()
 
 cursor_lock = threading.Lock()
 cursor = 50
@@ -83,6 +85,9 @@ def print_cursor():
     while True:
         with cursor_lock:
             print(cursor)
+            update_luminosity(cursor)
+            if cursor < 50:
+                notify("L'écran pété", "Vous êtes en colère")
         sleep(5)
     
 
