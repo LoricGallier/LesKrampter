@@ -82,7 +82,6 @@ def reset_cursor():
 def print_cursor():
     while True:
         with cursor_lock:
-        
             print(cursor)
         sleep(5)
     

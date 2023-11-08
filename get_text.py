@@ -84,9 +84,9 @@ def record_text():
                     text = output['text']
                     print(text)
                     if (get_emotionV2(text) =="POSITIVE"):
-                        increase_cursor(5)
-                    else:
                         decrease_cursor(5)
+                    else:
+                        increase_cursor(5)
                     
                     print(text)
                     
