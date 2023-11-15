@@ -20,5 +20,3 @@ thread_cursor.start()
 thread_text.join()  
 thread_video.join()
 thread_cursor.join()
-
-subprocess.call(['xrandr', '--output', get_display_name(), '--brightness', str(float(1))])

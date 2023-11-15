@@ -59,7 +59,7 @@ def get_volume():
     return int(volume[:-2])
 
 # A partir du niveau de colère en entrée, le son évolue progressiment jusqu'à un certain pourcentage
-# du volume initial (ces pourcentages sont définis dans la liste "limits")
+# du volume initial 
 def update_volume(emotion_level, initial_volume): # 0: Très en colère, 100: normal
     global updating_volume
     if not updating_volume:

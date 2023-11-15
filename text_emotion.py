@@ -16,7 +16,6 @@ def get_emotionV2(text):
     outputs = model(input_ids)
     predictions = outputs.logits.argmax(dim=1)
 
-    # Les prédictions possibles sont : "colère", "joie", "peur", "s tristesse", "surprise"
     émotion_dominante = predictions.item()
     print(f"L'émotion dominante dans votre texte est : {émotion_dominante}")
     return émotion_dominante
