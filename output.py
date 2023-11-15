@@ -2,10 +2,9 @@ from plyer import notification
 import subprocess
 import time
 
-current_luminosity = 100
-limits = [20, 40, 60, 80]
 updating_luminosity = False
 updating_volume = False
+current_luminosity = 100
 
 # Notifications
 def notify(title, message):
@@ -37,15 +36,17 @@ def set_luminosity(display_name, level): # level goes from 0 to 100
             time.sleep(0.1)
     current_luminosity = level
 
-def update_luminosity(emotionRate): # 0: Très en colère, 100: normal
+def update_luminosity(emotionRate): # 0: Très en colère, 100: calme
     global updating_luminosity
     if not updating_luminosity:
         updating_luminosity = True
         new_level = 100
-        for i in range(0, len(limits)):
-            if emotionRate < limits[i]:
-                new_level = int(limits[i] / 100 * current_luminosity)
-                break
+        if emotionRate <= 40:
+            new_level = 40
+        elif emotionRate <= 60:
+            new_level = 60
+        elif emotionRate <= 80:
+            new_level = 80
         set_luminosity(get_display_name(), new_level)
         updating_luminosity = False
 
@@ -57,26 +58,12 @@ def get_volume():
     volume = subprocess.check_output("amixer -D pulse get Master | awk -F '[][]' '/Front Left: Playback/ {print $2}'", shell=True, text=True)
     return int(volume[:-2])
 
-initial_volume = get_volume()
-
 # A partir du niveau de colère en entrée, le son évolue progressiment jusqu'à un certain pourcentage
 # du volume initial (ces pourcentages sont définis dans la liste "limits")
-def update_volume(emotion_level): # 0: Très en colère, 100: normal
-    global updatingVolume
-    if not updatingVolume:
-        updatingVolume = True
-        new_volume = initial_volume
-        for i in range(0, len(limits)):
-            if emotion_level < limits[i]:
-                new_volume = int(limits[i] / 100 * initial_volume)
-                break
-        if new_volume != initial_volume:
-            while get_volume() != new_volume:
-                v = get_volume()
-                print(v)
-                if new_volume < v:
-                    set_volume(v - 1)
-                else:
-                    set_volume(v + 1)
-                time.sleep(0.2)
-        updatingVolume = False
+def update_volume(emotion_level, initial_volume): # 0: Très en colère, 100: normal
+    global updating_volume
+    if not updating_volume:
+        updating_volume = True
+        new_volume = int(initial_volume*(emotion_level/100))
+        set_volume(new_volume)
+        updating_volume = False

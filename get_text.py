@@ -83,10 +83,10 @@ def record_text():
                     output = json.loads(rec.Result())
                     text = output['text']
                     print(text)
-                    if (get_emotionV2(text) =="POSITIVE"):
-                        decrease_cursor(5)
+                    if (get_emotionV2(text) == 0):
+                        decrease_cursor(10)
                     else:
-                        increase_cursor(5)
+                        increase_cursor(10)
                     
                     print(text)
                     

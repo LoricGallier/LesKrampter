@@ -17,7 +17,7 @@ import logging
 
 def record_video() :
     #Importing the model
-    trained_model = models.load_model('video/trained_models/trained_vggface.h5', compile=False)
+    trained_model = models.load_model('video/datasets/trained_models/trained_vggface.h5', compile=False)
     trained_model.summary()
 
     # prevents openCL usage and unnecessary logging messages
@@ -29,11 +29,7 @@ def record_video() :
     cap = cv2.VideoCapture(0)
     black = np.zeros((96,96))
 
-    angry = False
-    angryTime = 0
-    notAngryTime = 0
-    angryIncreaseDelay = 3
-    increaseAmount = 5
+    increaseAmount = 10
 
     while True:
         # Find haar cascade to draw bounding box around face
@@ -50,31 +46,19 @@ def record_video() :
                 # extract the face
                 face = frame[y1:y2, x1:x2]
                 #Draw a rectangle around the face
-                #cv2.rectangle(frame, (x1, y1), (x1+width, y1+height), (255, 0, 0), 2)
+                # cv2.rectangle(frame, (x1, y1), (x1+width, y1+height), (255, 0, 0), 2)
                 # resize pixels to the model size
                 cropped_img = cv2.resize(face, (96,96)) 
                 cropped_img_expanded = np.expand_dims(cropped_img, axis=0)
                 cropped_img_float = cropped_img_expanded.astype(float)
                 prediction = trained_model.predict(cropped_img_float)
                 maxindex = int(np.argmax(prediction))
-                #cv2.putText(frame, emotion_dict[maxindex], (x1+20, y1-60), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
-                if maxindex==0 and not angry:
-                    angry = True
-                    angryTime = 0
-                    increase_cursor(increaseAmount)
-                elif maxindex!=0 and angry:
-                    angry = False
-                    notAngryTime = 0
+                # cv2.putText(frame, emotion_dict[maxindex], (x1+20, y1-60), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
+                print("EMOTION = "+str(maxindex))
+                if maxindex == 0 | maxindex == 4:
                     decrease_cursor(increaseAmount)
-                else :
-                    if angry:
-                        angryTime += 1
-                    else:
-                        notAngryTime += 1
-                    if(angryTime%angryIncreaseDelay==0 and angry):
-                        increase_cursor(increaseAmount)
-                    if(notAngryTime%angryIncreaseDelay==0 and not angry):
-                        decrease_cursor(increaseAmount)
+                else:
+                    increase_cursor(increaseAmount)
             except:
                 pass
         if cv2.waitKey(1) & 0xFF == ord('q'):
